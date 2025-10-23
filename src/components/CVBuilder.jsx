@@ -33,14 +33,28 @@ export default function CVBuilder() {
     { company: "", title: "", date: "", description: "", link: "" },
   ]);
 
+  const [educations, setEducations] = useState([
+    {
+      degree: "",
+      major: "",
+      institution: "",
+      gpa: "",
+      startDate: "",
+      endDate: "",
+      description: "",
+    },
+  ]);
+
   const handleListChange = (listName, index, e) => {
-    const newList = [...(listName  === "experiences" ? experiences : projects)];
+    const newList = [...(listName  === "experiences" ? experiences : listName === "projects" ? projects : educations)];
     newList[index][e.target.name] = e.target.value;
 
     if (listName === "experiences") {
       setExperiences(newList);
-    } else {
+    } else if (listName === "projects") {
       setProjects(newList);
+    } else {
+      setEducations(newList);
     }
   };
 
@@ -76,6 +90,7 @@ export default function CVBuilder() {
             { id: "contact", label: "بيانات التواصل" },
             { id: "experience", label: "الخبرات" },
             { id: "project", label: "المشاريع" },
+            { id: "education", label: "التعليم"},
           ].map((tab) => (
             <button
               key={tab.id}
@@ -340,26 +355,93 @@ export default function CVBuilder() {
             )}
           />
         )}
+
+        {activeTab === "education" && (
+          <SortableSection
+            title="تعليم"
+            items={educations}
+            setItems={setEducations}
+            emptyItem={{
+              degree: "",
+              major: "",
+              institution: "",
+              gpa: "",
+              startDate: "",
+              endDate: "",
+              description: "",
+            }}
+            gender="m"
+            itemLabel={(item, index) =>
+              item.degree && item.degree.trim() !== ""
+                ? item.degree
+                : item.institution && item.institution.trim() !== ""
+                ? item.institution
+                : `التعليم ${index + 1}`
+            }
+            renderForm={(edu, index) => (
+              <div className="grid grid-cols-2 gap-4">
+                <FormInput
+                  label="الدرجة العلمية"
+                  name="degree"
+                  value={edu.degree}
+                  onChange={(e) => handleListChange("educations", index, e)}
+                />
+                <FormInput
+                  label="التخصص"
+                  name="major"
+                  value={edu.major}
+                  onChange={(e) => handleListChange("educations", index, e)}
+                />
+                <FormInput
+                  label="المؤسسة / الجامعة"
+                  name="institution"
+                  value={edu.institution}
+                  onChange={(e) => handleListChange("educations", index, e)}
+                />
+                <FormInput
+                  label="المعدل التراكمي (GPA)"
+                  name="gpa"
+                  value={edu.gpa}
+                  onChange={(e) => handleListChange("educations", index, e)}
+                />
+                <DateInput
+                  label="تاريخ البداية"
+                  name="startDate"
+                  value={edu.startDate}
+                  maxDate={edu.endDate}
+                  onChange={(date) => {
+                    const newList = [...educations];
+                    newList[index].startDate = date;
+                    setEducations(newList);
+                  }}
+                />
+                <DateInput
+                  label="تاريخ النهاية / التخرج"
+                  name="endDate"
+                  value={edu.endDate}
+                  minDate={edu.startDate}
+                  allowPresent={true}
+                  onChange={(date) => {
+                    const newList = [...educations];
+                    newList[index].endDate = date;
+                    setEducations(newList);
+                  }}
+                />
+                <FormTextarea
+                  label="الوصف"
+                  name="description"
+                  value={edu.description}
+                  onChange={(e) => handleListChange("educations", index, e)}
+                  className="col-span-2"
+                />
+              </div>
+            )}
+          />
+        )}
       </div>
 
       <div className="border p-6 rounded-lg shadow bg-white">
         <h1 className="text-2xl font-bold">{formData.name || "الاسم هنا"}</h1>
-        <p>
-          {formData.email || "الإيميل هنا"} |{" "}
-          {formData.phone || "الهاتف هنا"}
-        </p>
-        <p className="mt-2">
-          {formData.city || "المدينة"} - {formData.state || "المحافظة"}
-        </p>
-
-        <h2 className="mt-4 text-lg font-semibold">الخبرات</h2>
-        <p>{formData.experience || "اكتب خبراتك هنا"}</p>
-
-        <h2 className="mt-4 text-lg font-semibold">التعليم</h2>
-        <p>{formData.education || "اكتب تعليمك هنا"}</p>
-
-        <h2 className="mt-4 text-lg font-semibold">المهارات</h2>
-        <p>{formData.skills || "اكتب مهاراتك هنا"}</p>
       </div>
     </div>
   );

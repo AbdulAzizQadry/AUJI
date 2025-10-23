@@ -33,7 +33,7 @@ export default function SortableSection({
     <div className="space-y-4" dir="rtl">
       {items.map((item, index) => (
         <div key={index} className="border p-4 rounded-lg shadow-sm relative">
-          <h3 className="font-semibold mb-2">{itemLabel(item, index)}</h3>
+          <h3 className="font-semibold mb-4">{itemLabel(item, index)}</h3>
 
           {renderForm(item, index)}
 

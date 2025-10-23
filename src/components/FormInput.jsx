@@ -9,7 +9,7 @@ export default function FormInput({ label, type = "text", name, value, onChange,
         onChange={onChange}
         placeholder={placeholder || label}
         autoComplete="off"
-        className="peer w-full border rounded p-2 placeholder-transparent focus:outline-none focus:border-blue-500 bg-white caret-blue-500 text-left"
+        className="ppeer w-full border rounded p-2 placeholder-transparent focus:outline-none focus:border-blue-500 bg-white caret-blue-500 text-right"
         {...props}
       />
       <label
